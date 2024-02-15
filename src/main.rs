@@ -37,16 +37,14 @@ async fn main() -> Result<()> {
         let msg = msg?;
         match msg {
             Message::Ping(payload) => {
-                println!("PING received");
                 writer.send(Message::Pong(payload)).await?;
-                println!("PONG sent");
+                println!("made a PING/PONG");
             }
             Message::Text(text) => {
-                println!("Text received");
-                println!("{text}");
+                print!("{text}");
             }
             Message::Binary(bin) => {
-                println!("Binary received");
+                println!("Unexpected binary received");
                 println!("{bin:?}");
             }
             msg => {
