@@ -10,7 +10,7 @@ use tokio_tungstenite::tungstenite::Result;
 #[tokio::main]
 async fn main() -> Result<()> {
     // let case_url = Url::parse("wss://data-stream.binance.vision/ws").expect("BAD URL");
-    let case_url = Url::parse("wss://stream.binance.com:9443").expect("BAD URL");
+    let case_url = Url::parse("wss://stream.binance.com:443/ws").expect("BAD URL");
     let (ws_stream, _) = connect_async(case_url).await?;
     let (mut writer, mut reader) = ws_stream.split();
     let subscribe = r#"{
