@@ -11,7 +11,15 @@ use tokio_tungstenite::tungstenite::Result;
 async fn main() -> Result<()> {
     // let case_url = Url::parse("wss://data-stream.binance.vision/ws").expect("BAD URL");
     let case_url = Url::parse("wss://stream.binance.com:443/ws").expect("BAD URL");
-    let (ws_stream, _) = connect_async(case_url).await?;
+    let (ws_stream, _) = connect_async(case_url).await.map_err(|e| match e {
+        tokio_tungstenite::tungstenite::Error::Http(ref res) => {
+            if let Some(body) = res.body() {
+                println!("{}", String::from_utf8(body.clone()).expect("BADBAD"));
+            }
+            e
+        }
+        _ => e,
+    })?;
     let (mut writer, mut reader) = ws_stream.split();
     let subscribe = r#"{
     "method":"SUBSCRIBE",
