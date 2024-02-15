@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
         [
             "btcusdt@aggTrade",
             "btcusdt@depth",
-            "btcusdt@avgPrice"
+            "btcusdt@avgPrice",
             "ethusdt@avgPrice"
         ],
     "id": 1234
