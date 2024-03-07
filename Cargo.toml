@@ -9,6 +9,8 @@ edition = "2021"
 axum = "0.7"
 tokio = { version = "1.36", features = ["full"] }
 reqwest = { version = "0.11", features = ["json"] }
-tokio-tungstenite = {version = "*",features = ["native-tls"]}
-# url = "*"
+tokio-tungstenite = { version = "*", features = ["native-tls"] }
 futures-util = "0.3"
+serde = { features = ["derive"], version = "1" }
+serde_json = "1"
+polars = "0.38"

@@ -1,20 +1,29 @@
+// use futures_util::FutureExt;
 use futures_util::SinkExt;
 use futures_util::StreamExt;
 use reqwest::Url;
-use tokio_tungstenite::connect_async;
-use tokio_tungstenite::connect_async_with_config;
-use tokio_tungstenite::tungstenite::protocol::WebSocketConfig;
-use tokio_tungstenite::tungstenite::Message;
-use tokio_tungstenite::tungstenite::Result;
-// use url::Url;
-// use url::Url;
+use tokio::select;
+use tokio_tungstenite::{
+    connect_async_with_config,
+    tungstenite::{protocol::WebSocketConfig, Message, Result},
+};
 
+async fn fun1() -> Option<usize> {
+    0.into()
+}
+async fn fun2() -> usize {
+    0
+}
 #[tokio::main]
 async fn main() -> Result<()> {
+    let _c = select! {
+       Some(a) = fun1() => a,
+       a = fun2() => a,
+    };
     // let case_url = Url::parse("wss://data-stream.binance.vision/ws").expect("BAD URL");
-    let case_url = Url::parse("wss://stream.binance.com:443/ws").expect("BAD URL");
+    let binance_stream_url = Url::parse("wss://stream.binance.com:443/ws").expect("BAD URL");
     let (ws_stream, _) = connect_async_with_config(
-        case_url,
+        binance_stream_url,
         Some(WebSocketConfig {
             ..Default::default()
         }),
@@ -30,7 +39,6 @@ async fn main() -> Result<()> {
         }
         _ => e,
     })?;
-    let &b = br#"df"ddfhfhiiif"#;
     let (mut writer, mut reader) = ws_stream.split();
     let subscribe = r#"{
     "method":"SUBSCRIBE",
@@ -59,7 +67,7 @@ async fn main() -> Result<()> {
                 println!("{bin:?}");
             }
             msg => {
-                println!("MSG received:{msg:#?}");
+                println!("other MSG received:{msg:#?}");
             }
         }
     }
